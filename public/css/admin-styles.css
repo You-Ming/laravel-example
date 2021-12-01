@@ -1,0 +1,115 @@
+body {
+  font-family: 微軟正黑體;
+}
+
+.btn_admin{
+  display: none;
+}
+
+.img_admin_banner {
+  width: 104px;
+  height: 39px;
+}
+
+.img_admin_product {
+  width: 50px;
+  height: 40px;
+}
+
+.tb_contact_time {
+  display: none;
+}
+
+.tb_contact_title{width:50%;} .tb_contact_name{width:30%;} .tb_contact_btn{width:20%;}
+
+.siderbar ul li a.active {
+  background-color: #eeeeee;
+}
+
+#sec_product_spec_update,#sec_product_spec {
+  margin-bottom: 10px;
+}
+
+.nav_list {
+  margin-bottom: 5px;
+}
+
+.image-preview-input {
+  position: relative;
+	overflow: hidden;
+	margin: 0px;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.image-preview-input input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+.image-preview-input-title {
+  margin-left:2px;
+}
+
+.breadcrumb>li>a:hover,.breadcrumb>li>a:focus{
+  text-decoration: none;
+}
+
+
+@media (min-width:768px) {
+  .btn_admin{
+    display: inline-block;;
+  }
+
+  .img_admin_banner {
+    width: 160px;
+    height: 60px;
+  }
+
+  .img_admin_product {
+    width: 75px;
+    height: 60px;
+  }
+
+  .tb_contact_time {
+    display: table-cell;
+  }
+
+  .tb_contact_title{width:30%;} .tb_contact_name{width:23%;} .tb_contact_time{width:27%;} .tb_contact_btn{width:20%;}
+
+  #time_news,#time_mews_update {
+    width: 250px;
+  }
+
+  #txt_news_title,#txt_update_news,#txt_banner_title,#txt_banner_title_update {
+    width: 500px;
+  }
+
+  #txt_product_name,#txt_banner_name {
+    width: 220px;
+  }
+
+  .user_error4{
+    margin-left: -20px;
+    padding-top: 9px;
+  }
+
+  #btn_del_product_spec {
+    height: 34px;
+  }
+
+  .search-group .input-group-btn{
+    width:auto;
+  }
+
+  .input-group .input-search {
+    width: 250px;
+  }
+
+}
