@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use App\Models\News;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -17,7 +19,9 @@ class HomeController extends Controller
      */
     public function index(){
         return view('pages.home', [
-            'banners' => Banner::all()
+            'banners' => Banner::all(),
+            'homenews' => News::orderBy('created_at', 'desc')->skip(0)->take(3)->get(),
+            'products' => Product::orderBy('created_at', 'desc')->skip(0)->take(4)->get()
         ]);
     }
 }
