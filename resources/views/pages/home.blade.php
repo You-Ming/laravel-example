@@ -56,8 +56,8 @@
                   @foreach ($products as $product)
                   <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
                     <li id='li_product'>
-                      <a href='/product/{{ $product->product_type_id }}/{{ $product->name }}'>{{ $product->name }}</a><br>
-                      <a href='/product/{{ $product->product_type_id }}/{{ $product->name }}'>
+                      <a href='/product/{{ $product->product_type->name }}/{{ $product->name }}'>{{ $product->name }}</a><br>
+                      <a href='/product/{{ $product->product_type->name }}/{{ $product->name }}'>
                       <img class="img_product" src='/uploads/images/product/{{ $product->image_name }}'>
                       </a>
                     </li>
