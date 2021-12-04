@@ -28,6 +28,4 @@ use App\Http\Controllers\AboutController;
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/about/{title}', [AboutController::class, 'index']);
-
-Route::get('/about', [AboutController::class, 'index']);
+Route::resource('about', AboutController::class)->only(['index', 'show'])->parameters(['about' => 'title']);

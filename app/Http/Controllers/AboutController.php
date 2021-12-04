@@ -8,7 +8,11 @@ use Illuminate\Http\Request;
 
 class AboutController extends Controller
 {
-    public function index($title = NULL){
+    public function index(){
+        return $this->show();
+    }
+
+    public function show($title = NULL){
 
         $abouts = About::all();
 
@@ -28,4 +32,6 @@ class AboutController extends Controller
             'title' => $title,
         ]);
     }
+
+
 }
