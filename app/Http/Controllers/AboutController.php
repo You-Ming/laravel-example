@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\About;
-use Illuminate\Support\ItemNotFoundException;
 
 use Illuminate\Http\Request;
+use App\Models\About;
+use Illuminate\Support\ItemNotFoundException;
 
 class AboutController extends Controller
 {
