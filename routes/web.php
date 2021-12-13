@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ProductController;
 
 
 /*
@@ -29,6 +30,10 @@ use App\Http\Controllers\NewsController;
  * $route['news/page'] = 'news';
  * $route['news/(:any)'] = 'news/view/$1';
  * $route['news'] = 'news';
+ * $route['product/(:any)/(:any)'] = 'product/view/$1/$2';
+ * $route['product/(:any)'] = 'product/index/$1';
+ * $route['product'] = 'product';
+ * $route['contact'] = 'contact';
  */
 
 Route::get('/', [HomeController::class, 'index']);
@@ -36,4 +41,11 @@ Route::get('/', [HomeController::class, 'index']);
 Route::resource('about', AboutController::class)->only(['index', 'show'])->parameters(['about' => 'title']);
 
 Route::resource('news', NewsController::class)->only(['index', 'show']);
+
+Route::prefix('product')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{type}', [ProductController::class, 'index']);
+    Route::get('/{type}/{name}', [ProductController::class, 'show']);
+});
+
 
