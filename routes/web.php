@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ContactController;
 
 
 /*
@@ -47,5 +48,8 @@ Route::prefix('product')->group(function () {
     Route::get('/{type}', [ProductController::class, 'index']);
     Route::get('/{type}/{name}', [ProductController::class, 'show']);
 });
+
+Route::view('contact', 'contact.index');
+Route::post('ajax/contact', [ContactController::class, 'store']);
 
 

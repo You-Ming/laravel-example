@@ -2,6 +2,12 @@
 
 return [
 
+    // Google reCAPTCHA setting
+    'recaptcha_enable' => env('RECAPTCHA_ENABLE'),
+    'recaptcha_url' => env('RECAPTCHA_URL'),
+    'recaptcha_site_key' => env('RECAPTCHA_SITE_KEY'),
+    'recaptcha_secret_key' => env('RECAPTCHA_SECRET_KEY'),
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
