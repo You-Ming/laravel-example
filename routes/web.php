@@ -6,6 +6,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SigninController;
 
 
 /*
@@ -52,4 +53,12 @@ Route::prefix('product')->group(function () {
 Route::view('contact', 'contact.index');
 Route::post('ajax/contact', [ContactController::class, 'store']);
 
+Route::view('sign_in', 'signin.index');
+Route::post('ajax/signin', [SigninController::class, 'signin']);
+Route::get('signout', [SigninController::class, 'signout']);
 
+
+
+Route::get('/admin', function () {
+    return '123';
+})->middleware('auth');
