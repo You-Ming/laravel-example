@@ -8,6 +8,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SigninController;
 
+use App\Http\Controllers\Admin\AdminController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +40,7 @@ use App\Http\Controllers\SigninController;
  * $route['contact'] = 'contact';
  */
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::resource('about', AboutController::class)->only(['index', 'show'])->parameters(['about' => 'title']);
 
@@ -53,12 +55,16 @@ Route::prefix('product')->group(function () {
 Route::view('contact', 'contact.index');
 Route::post('ajax/contact', [ContactController::class, 'store']);
 
-Route::view('sign_in', 'signin.index');
+Route::view('sign_in', 'signin.index')->name('sign_in');
+Route::view('login', 'signin.index')->name('login');
 Route::post('ajax/signin', [SigninController::class, 'signin']);
 Route::get('signout', [SigninController::class, 'signout']);
 
 
 
-Route::get('/admin', function () {
-    return '123';
-})->middleware('auth');
+
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/', [AdminController::class, 'index']);
+    Route::get('/log_out', [SigninController::class, 'signout']);
+
+});
