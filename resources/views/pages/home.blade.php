@@ -17,7 +17,7 @@
           <div class="carousel-inner" role="listbox">
           @foreach ($banners as $banner)
             <div class="item {{ $loop->first ? 'active' : ''}}">
-                <img src="/uploads/images/banner/{{ $banner->image_name }}" alt="{{ $banner->name }}" title="{{ $banner->title }}">
+                <img src="/storage/uploads/images/banner/{{ $banner->image_name }}" alt="{{ $banner->name }}" title="{{ $banner->title }}">
             </div>
           @endforeach
           </div>
@@ -58,7 +58,7 @@
                     <li id='li_product'>
                       <a href='/product/{{ $product->product_type->name }}/{{ $product->name }}'>{{ $product->name }}</a><br>
                       <a href='/product/{{ $product->product_type->name }}/{{ $product->name }}'>
-                      <img class="img_product" src='/uploads/images/product/{{ $product->image_name }}'>
+                      <img class="img_product" src='/storage/uploads/images/product/{{ $product->image_name }}'>
                       </a>
                     </li>
                   </div>

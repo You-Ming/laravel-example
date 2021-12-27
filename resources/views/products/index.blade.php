@@ -22,7 +22,7 @@
           <li id='li_product'>
             <a href='/product/{{ $product->product_type->name }}/{{ $product->name }}'>{{ $product->name }}</a><br>
             <a href='/product/{{ $product->product_type->name }}/{{ $product->name }}'>
-            <img class="img_product" src='/uploads/images/product/{{ $product->image_name }}' width="150px" height="120px">
+            <img class="img_product" src='/storage/uploads/images/product/{{ $product->image_name }}' width="150px" height="120px">
             </a>
           </li>
         </div>

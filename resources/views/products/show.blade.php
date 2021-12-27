@@ -13,7 +13,7 @@
         <h1>{{ $product->name }}</h1>
         <div class="row">
             <div class="col-sm-7 col-md-5">
-            <img class="img_product_view" src='/uploads/images/product/{{ $product->image_name }}'>
+            <img class="img_product_view" src='/storage/uploads/images/product/{{ $product->image_name }}'>
             </div>
 
             <div class="col-sm-5">

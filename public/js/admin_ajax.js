@@ -51,10 +51,13 @@ $('[data-toggle=confirmation_banner]').confirmation({//確認刪除橫幅
     var bannerID = $(this).attr("data-id");
     var bannerImgName = $(this).attr("data-name");
     $.ajax({
-        url:"/admin/ajax/delete_banner",
-        data:"bannerID="+bannerID+"&bannerImgName="+bannerImgName,
-        type:"POST",
+        url:"/admin/home/"+bannerID,
+        //data:"bannerID="+bannerID+"&bannerImgName="+bannerImgName,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -189,38 +192,37 @@ $("#btn_delete_user").click(function(){//確定刪除管理者
 
 $("#btn_create_banner").click(function(){//新增橫幅
   var name = $("#txt_banner_name").val();
-  var filename = $("#txt_banner_img_name").val();
-  var title = $("#txt_banner_title").val();
   var error1 = $(".banner_error1").text();
   var formData = new FormData($('#formSetBanner')[0]);
 
   if(name!="" && error1==""){
     $.ajax({
-        url:"/admin/admin/set_banner",
+        url:"/admin/home",
         data:formData,
         type:"POST",
         datatype:"json",
         contentType: false,
         processData: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
         success:function(msg){
-            msg = JSON.parse(msg);
-            if(msg.status){
-              if(msg.data == "success"){
-                  alert("新增成功");
-                  $(location).attr("href","/admin/home");
-              }else if(msg.data == "empty"){
-                  alert("請輸入橫幅名稱");
-              }else if(msg.data == "repeat"){
-                  alert("此名稱已使用過，請重新輸入");
-              }else{
-                  alert("新增失敗");
-              }
-            }
-            else{
-              $('<p>'+msg.error_string+'</p>').appendTo($('#banner_upload_error'));
+            if(msg == "success") {
+                alert("新增成功");
+                $(location).attr("href","/admin/home");
+            }else if(msg == "empty"){
+              alert("請輸入橫幅名稱");
+            }else if(msg == "repeat"){
+                alert("此名稱已使用過，請重新輸入");
+            }else if(msg == "uploadError"){
+                $('<p>圖片上傳失敗</p>').appendTo($('#banner_upload_error'));
+            }else if(msg == "createError"){
+                alert("新增失敗");
+            }else{
+                alert("失敗");
             }
         },
     })
@@ -242,17 +244,20 @@ $("#btn_update_banner").click(function(){//更新橫幅
 
   if(name!="" && error==""){
     $.ajax({
-        url:"/admin/ajax/update_banner",
-        data:"bannerID="+id+"&bannerOldname="+oldname+"&bannerName="+name+"&bannerTitle="+title,
-        type:"POST",
+        url:"/admin/home/"+id,
+        data:"bannerName="+name+"&bannerTitle="+title,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
-            alert("錯誤!");
+            alert("錯誤");
         },
         success:function(msg){
             if(msg == "success"){
-                alert("修改成功");
-                $(location).attr("href","/admin/home");
+              alert("修改成功");
+              $(location).attr("href","/admin/home");
             }else if(msg == "empty"){
                 alert("請輸入產品名稱");
             }else if(msg == "repeat"){

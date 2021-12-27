@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SigninController;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 
 
 /*
@@ -63,8 +64,12 @@ Route::get('signout', [SigninController::class, 'signout']);
 
 
 
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/', [AdminController::class, 'index']);
-    Route::get('/log_out', [SigninController::class, 'signout']);
+Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('welcome');
+    Route::get('/log_out', [SigninController::class, 'signout'])->name('log_out');
+    Route::resource('/home', AdminHomeController::class)->except('show');
+    Route::get('/home/image/{home}/edit', [AdminHomeController::class, 'edit_image'])->name('home.image.edit');
+    Route::put('/home/image/{home}', [AdminHomeController::class, 'update_image'])->name('home.image.update');
+
 
 });

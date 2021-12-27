@@ -88,13 +88,6 @@
                 <input type="button" value="返回" class="btn btn-primary btn-block" onclick="window.location.href='/'">
             </form>
             <p id="SignInMessage"></p>
-            @if (Auth::check())
-                <p>登入成功</p>
-                <form method="GET" action="/signout" class="form-signin" >
-                    @csrf
-                    <input type="submit" value="登出" class="btn btn-primary btn-block"/>
-                </form>
-            @endif
         </div>
     </body>
 </html>
