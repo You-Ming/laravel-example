@@ -36,7 +36,7 @@
             <div id="about_content">
                 @isset($content)
                 <h1>{{ $content->title }}</h1><br>
-                <p>{{ $content->content }}</p>
+                <p>{!! $content->content !!}</p>
                 @endisset
             </div>
         </div>

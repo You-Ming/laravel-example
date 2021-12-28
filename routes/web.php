@@ -10,6 +10,7 @@ use App\Http\Controllers\SigninController;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 
 
 /*
@@ -70,6 +71,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('/home', AdminHomeController::class)->except('show');
     Route::get('/home/image/{home}/edit', [AdminHomeController::class, 'edit_image'])->name('home.image.edit');
     Route::put('/home/image/{home}', [AdminHomeController::class, 'update_image'])->name('home.image.update');
+    Route::resource('/about', AdminAboutController::class)->except('show');
 
 
 });

@@ -1,11 +1,13 @@
 $('[data-toggle=confirmation_about]').confirmation({//確認刪除關於我們
   onConfirm: function() {//按下是
-    var aboutTitle = $(this).attr("data-id");
+    var id = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_about",
-        data:"aboutTitle="+aboutTitle,
-        type:"POST",
+        url:"/admin/about/"+id,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -282,10 +284,13 @@ $("#btn_create_about").click(function(){//新增關於我們
   var content = CKEDITOR.instances.textarea_set_about.getData();
   if(title != "" && error =="") {
     $.ajax({
-        url:"/admin/ajax/set_about",
+        url:"/admin/about",
         data:"aboutTitle="+title+"&aboutContent="+content,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -300,8 +305,11 @@ $("#btn_create_about").click(function(){//新增關於我們
             else if(msg == "repeat") {
               alert("此標題已使用，請重新輸入");
             }
-            else {
+            else if(msg == "createError"){
               alert("新增失敗");
+            }
+            else {
+              alert("失敗");
             }
         }
     })
@@ -314,16 +322,19 @@ $("#btn_create_about").click(function(){//新增關於我們
 });
 
 $("#btn_update_about").click(function(){//更新關於我們
-  var oldtitle = $(this).attr("data-id");
+  var id = $(this).attr("data-id");
   var title = $("#txt_update_about").val();
   var error = $(".about_error1").text();
   var content = CKEDITOR.instances.textarea_update_about.getData();
   if(title != "" && error == "") {
     $.ajax({
-        url:"/admin/ajax/update_about",
-        data:"oldtitle="+oldtitle+"&aboutTitle="+title+"&aboutContent="+content,
-        type:"POST",
+        url:"/admin/about/"+id,
+        data:"aboutTitle="+title+"&aboutContent="+content,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -338,8 +349,11 @@ $("#btn_update_about").click(function(){//更新關於我們
             else if(msg == "repeat") {
               alert("此標題已使用，請重新輸入");
             }
+            else if(msg == "updateError"){
+              alert("更新失敗");
+            }
             else {
-              alert("新增失敗");
+              alert("失敗");
             }
         }
     })
