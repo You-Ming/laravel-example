@@ -80,10 +80,12 @@ $('[data-toggle=confirmation_news]').confirmation({//確認刪除新聞
   onConfirm: function() {
     var newsID = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_news",
-        data:"newsID="+newsID,
-        type:"POST",
+        url:"/admin/news/"+newsID,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("失敗");
         },
@@ -371,10 +373,13 @@ $("#btn_create_news").click(function(){//新增新聞
   var content = CKEDITOR.instances.textarea_set_news.getData();
   if(title != "") {
     $.ajax({
-        url:"/admin/ajax/set_news",
+        url:"/admin/news",
         data:"newsTitle="+title+"&newsTime="+time+"&newsContent="+content,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -386,11 +391,11 @@ $("#btn_create_news").click(function(){//新增新聞
             else if(msg == "empty") {
               alert("請輸入標題");
             }
-            else if(msg == "repeat") {
-              alert("此標題已使用，請重新輸入");
+            else if(msg == "createError"){
+              alert("新增失敗");
             }
             else {
-              alert("新增失敗");
+              alert("失敗");
             }
         }
     })
@@ -408,10 +413,13 @@ $("#btn_update_news").click(function(){//更新新聞
 
   if(title != "" && time != ""){
     $.ajax({
-        url:"/admin/ajax/update_news",
+        url:"/admin/news/"+id,
         data:"newsID="+id+"&newsTitle="+title+"&newsContent="+content+"&newsTime="+time,
-        type:"POST",
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
           alert("錯誤");
         },
@@ -423,8 +431,11 @@ $("#btn_update_news").click(function(){//更新新聞
           else if(msg == "empty"){
             alert("請輸入標題及時間");
           }
-          else {
+          else if(msg == "updateError"){
             alert("修改失敗");
+          }
+          else {
+            alert("失敗");
           }
         },
     })

@@ -34,7 +34,7 @@
               <div id="news_content">
                   <h1>{{ $news_item->title }}</h1>
                   <p>{{ $news_item->created_at }}</p>
-                  <p>{{ $news_item->content }}</p></br>
+                  <p>{!! $news_item->content !!}</p><br>
               </div>
               <div id="news_content_btn">
                   <input type="button" class="btn btn-primary btn-sm" value="返回新聞列表" id="btn_back_news_list" />

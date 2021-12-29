@@ -104,7 +104,7 @@ $(function() {//預覽圖片
 
 $(function(){
   var backPath = document.referrer;
-  var backPathArray = document.referrer.split('/');
+  var backPathArray = document.referrer.split('?')[0].split('/');
   if(backPathArray[4] == "news"){
     $("#btn_back_admin_news").attr("onclick","window.location.href='"+backPath+"'");
   }
