@@ -27,7 +27,7 @@
 
             <div class="col-xs-8">
             <h4>產品描述:</h4>
-            <p>{{ $product->description }}</p>
+            <p>{!! $product->description !!}</p>
             </div>
         </div><br>
         <input type='button' class="btn btn-primary btn-sm" onclick="history.back()" value='返回'>

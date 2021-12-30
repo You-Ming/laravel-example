@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 
 
 /*
@@ -75,6 +76,10 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('/about', AdminAboutController::class)->except('show');
     Route::resource('/news', AdminNewsController::class)->except('show');
     Route::get('/news/search', [AdminNewsController::class, 'search'])->name('news.search');
+    Route::resource('/product', AdminProductController::class)->except('show');
+    Route::get('/product/image/{product}/edit', [AdminProductController::class, 'edit_image'])->name('product.image.edit');
+    Route::put('/product/image/{product}', [AdminProductController::class, 'update_image'])->name('product.image.update');
+    Route::get('/product/search', [AdminProductController::class, 'search'])->name('product.search');
 
 
 });

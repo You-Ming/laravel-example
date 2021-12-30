@@ -106,12 +106,13 @@ $('[data-toggle=confirmation_news]').confirmation({//確認刪除新聞
 $('[data-toggle=confirmation_product]').confirmation({//確認刪除產品
   onConfirm: function() {
     var productID = $(this).attr("data-id");
-    var productImgName = $(this).attr("data-name");
     $.ajax({
-        url:"/admin/ajax/delete_product",
-        data:"productID="+productID+"&productImgName="+productImgName,
-        type:"POST",
+        url:"/admin/product/"+productID,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -629,33 +630,37 @@ $(document).on('click',"#btn_create_product",function(e){//新增產品
 
   if(name!="" && error=="" && type!=""){
     $.ajax({
-        url:"/admin/product/set_product",
+        url:"/admin/product",
         data:formData,
         type:"POST",
         datatype:"json",
         contentType: false,
         processData: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
         success:function(msg){
-          msg = JSON.parse(msg);
-          if(msg.status){
-            if(msg.data == "success"){
-                alert("新增成功");
-                $(location).attr("href","/admin/product");
-            }else if(msg.data == "empty"){
-                alert("請輸入產品名稱");
-            }else if(msg.data == "repeat"){
-                alert("此名稱已使用過，請重新輸入");
-            }else if(msg.data == "typeEmpty"){
-                alert("請選擇產品分類");
-            }else if(msg.data == "error"){
-                alert("新增失敗");
-            }
+          if(msg == "success") {
+            alert("新增成功");
+            $(location).attr("href","/admin/product");
+          }else if(msg == "empty"){
+            alert("請輸入產品名稱");
+          }else if(msg == "repeat"){
+            alert("此名稱已使用過，請重新輸入");
+          }else if(msg == "typeEmpty"){
+            alert("請選擇產品分類");
+          }else if(msg == "uploadEmpty"){
+            alert("請選擇圖片");
+          }else if(msg == "uploadError"){
+            $('<p>圖片上傳失敗</p>').appendTo($('#product_upload_error'));
+          }else if(msg == "createError"){
+            alert("新增失敗");
           }else{
-              $('<p>'+msg.error_string+'</p>').appendTo($('#product_upload_error'));
-            }
+            alert("失敗");
+          }
         },
     })
   }else if(name == ""){
@@ -671,7 +676,6 @@ $(document).on('click',"#btn_create_product",function(e){//新增產品
 
 $("#btn_update_product").click(function(){//更新產品
   var id = $(this).attr("data-id");
-  var oldname = $(this).attr("data-name");
   var name = $("#txt_product_name_update").val();
   var type = $("#sel_product_type_update").val();
   var desc = CKEDITOR.instances.textarea_update_product_desc.getData();
@@ -686,25 +690,30 @@ $("#btn_update_product").click(function(){//更新產品
   var spec = JSON.stringify(json_data);
   if(name!="" && error=="" && type!=""){
     $.ajax({
-        url:"/admin/ajax/update_product",
-        data:"productID="+id+"&productOldname="+oldname+"&productName="+name+"&productType="+type+"&productSpecification="+spec+"&productDescription="+desc,
-        type:"POST",
+        url:"/admin/product/"+id,
+        data:"productName="+name+"&productType="+type+"&productSpecification="+spec+"&productDescription="+desc,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
         success:function(msg){
-            if(msg == "success"){
+            if(msg == "success") {
                 alert("修改成功");
                 $(location).attr("href","/admin/product");
             }else if(msg == "empty"){
-                alert("請輸入產品名稱");
+              alert("請輸入產品名稱");
             }else if(msg == "repeat"){
-                alert("此名稱已使用過，請重新輸入");
+              alert("此名稱已使用過，請重新輸入");
             }else if(msg == "typeEmpty"){
-                alert("請選擇產品分類");
+              alert("請選擇產品分類");
+            }else if(msg == "updateError"){
+              alert("修改失敗");
             }else{
-                alert("修改失敗");
+              alert("失敗");
             }
         },
     })
