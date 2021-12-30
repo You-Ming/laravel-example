@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductTypeController as AdminProductTypeController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 
 
 /*
@@ -82,6 +83,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::put('/product/image/{product}', [AdminProductController::class, 'update_image'])->name('product.image.update');
     Route::get('/product/search', [AdminProductController::class, 'search'])->name('product.search');
     Route::resource('/product_type', AdminProductTypeController::class)->except('show');
+    Route::get('/contact/search', [AdminContactController::class, 'search'])->name('contact.search');
+    Route::resource('/contact', AdminContactController::class)->only(['index', 'show', 'destroy']);
 
 
 });

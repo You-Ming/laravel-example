@@ -72,7 +72,7 @@
         </div>
     @endif
     <div align="center">
-        <button type="button" class="btn btn-primary" onclick="window.location.href='/admin/product'">返回產品列表</button>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('admin.product.index') }}'">返回產品列表</button>
     </div>
 </div>
 

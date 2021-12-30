@@ -28,10 +28,12 @@ $('[data-toggle=confirmation_contact]').confirmation({//確認刪除聯絡我們
   onConfirm: function() {
     var guestID = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_contact",
-        data:"guestID="+guestID,
-        type: "POST",
+        url:"/admin/contact/"+guestID,
+        type: "DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
