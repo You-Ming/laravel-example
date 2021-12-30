@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ProductTypeController as AdminProductTypeController;
 
 
 /*
@@ -80,6 +81,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('/product/image/{product}/edit', [AdminProductController::class, 'edit_image'])->name('product.image.edit');
     Route::put('/product/image/{product}', [AdminProductController::class, 'update_image'])->name('product.image.update');
     Route::get('/product/search', [AdminProductController::class, 'search'])->name('product.search');
+    Route::resource('/product_type', AdminProductTypeController::class)->except('show');
 
 
 });

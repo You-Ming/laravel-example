@@ -219,7 +219,7 @@ class ProductController extends Controller
                 //刪除圖片
                 Storage::delete($path);
             }
-            //刪除橫幅資料
+            //刪除產品資料
             if (!$product->delete()) {
                 return 'error';
             }

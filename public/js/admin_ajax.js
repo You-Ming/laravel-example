@@ -131,12 +131,14 @@ $('[data-toggle=confirmation_product]').confirmation({//確認刪除產品
 
 $('[data-toggle=confirmation_type]').confirmation({//確認刪除產品分類
   onConfirm: function() {
-    var typeName = $(this).attr("data-id");
+    var id = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_productType",
-        data:"typeName="+typeName,
-        type:"POST",
+        url:"/admin/product_type/"+id,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -546,10 +548,13 @@ $("#btn_create_productType").click(function(){//新增產品分類
 
   if(name!="" && error==""){
     $.ajax({
-        url:"/admin/ajax/set_productType",
-        data:"typeName="+name,
+        url:"/admin/product_type",
+        data:"productTypeName="+name,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
@@ -561,8 +566,10 @@ $("#btn_create_productType").click(function(){//新增產品分類
                 alert("請輸入分類名稱");
             }else if(msg == "repeat"){
                 alert("此名稱已使用過，請重新輸入");
-            }else{
+            }else if(msg == "createError"){
                 alert("新增失敗");
+            }else{
+                alert("失敗");
             }
         },
     })
@@ -576,16 +583,19 @@ $("#btn_create_productType").click(function(){//新增產品分類
 });
 
 $("#btn_update_productType").click(function(){//更新產品分類
-  var oldname = $(this).attr("data-id");
+  var id = $(this).attr("data-id");
   var name = $("#txt_productType_name_update").val();
   var error = $(".user_error1").text();
 
   if(name!="" && error==""){
     $.ajax({
-        url:"/admin/ajax/update_productType",
-        data:"typeName="+name+"&oldName="+oldname,
-        type:"POST",
+        url:"/admin/product_type/"+id,
+        data:"productTypeName="+name,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
@@ -597,8 +607,10 @@ $("#btn_update_productType").click(function(){//更新產品分類
                 alert("請輸入分類名稱");
             }else if(msg == "repeat"){
                 alert("此名稱已使用過，請重新輸入");
-            }else{
+            }else if(msg == "updateError"){
                 alert("修改失敗");
+            }else{
+                alert("失敗");
             }
         },
     })
