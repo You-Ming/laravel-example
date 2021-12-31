@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductTypeController as AdminProductTypeController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 
 /*
@@ -85,6 +86,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('/product_type', AdminProductTypeController::class)->except('show');
     Route::get('/contact/search', [AdminContactController::class, 'search'])->name('contact.search');
     Route::resource('/contact', AdminContactController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('/user', AdminUserController::class)->except('show');
 
 
 });

@@ -160,7 +160,7 @@ $('[data-toggle=confirmation_type]').confirmation({//確認刪除產品分類
 $('[data-toggle=confirmation_user]').confirmation({//確認刪除管理者
   onConfirm: function() {
     $("#modal_user").modal();//轉場效果輸入密碼
-    $("#text_del_user").text($(this).attr("data-id"));//取得管理者名稱
+    $("#text_del_user").text($(this).attr("data-email"));//取得管理者E-mail
     $("#modal_user").on('shown.bs.modal',function(){
       $("#del_password").val("");
       $(this).find("#del_password").focus();
@@ -171,13 +171,17 @@ $("#modal_user").on('hidden.bs.modal',function(){
     $("#text_del_user").text("");
 });
 $("#btn_delete_user").click(function(){//確定刪除管理者
-  var adminUsername = $("#text_del_user").text();
-  var adminPassword = $("#del_password").val();
+  var id = $(this).attr("data-id");
+  var adminEmail = $("#text_del_user").text();
+  var adminPassword = $().crypt({method:"sha1",source:$("#del_password").val()});
   $.ajax({
-      url:"/admin/ajax/delete_user",
-      data:"adminUsername="+adminUsername+"&adminPassword="+adminPassword,
-      type:"POST",
+      url:"/admin/user/"+id,
+      data:"adminEmail="+adminEmail+"&adminPassword="+adminPassword,
+      type:"DELETE",
       datatype:"json",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
       error:function(){
           alert("錯誤");
       },
@@ -192,8 +196,11 @@ $("#btn_delete_user").click(function(){//確定刪除管理者
           else if(msg == "empty") {
               alert("請輸入密碼");
           }
-          else {
+          else if(msg == "deleteError") {
               alert("刪除失敗");
+          }
+          else {
+              alert("失敗");
           }
       }
   })
@@ -452,7 +459,7 @@ $("#btn_update_news").click(function(){//更新新聞
 
 $("#btn_create_user").click(function(){//新增管理者
   var name = $("#txt_user_name").val();
-  var username = $("#txt_user_username").val();
+  var email = $("#txt_user_email").val();
   var password = $().crypt({method:"sha1",source:$("#psw_user_password").val()});
   var password2 = $().crypt({method:"sha1",source:$("#psw_user_password2").val()});
   var error1 = $(".user_error1").text();
@@ -460,12 +467,15 @@ $("#btn_create_user").click(function(){//新增管理者
   var error3 = $(".user_error3").text();
   var error4 = $(".user_error4").text();
 
-  if(name!="" && username!="" && password!="" && password==password2 && error1=="" && error2=="" && error3=="" && error4==""){
+  if(name!="" && email!="" && password!="" && password==password2 && error1=="" && error2=="" && error3=="" && error4==""){
     $.ajax({
-        url:"/admin/ajax/set_user",
-        data:"adminName="+name+"&adminUsername="+username+"&adminPassword="+password+"&adminPassword2="+password2,
+        url:"/admin/user",
+        data:"adminName="+name+"&adminEmail="+email+"&adminPassword="+password+"&adminPassword2="+password2,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
           alert("錯誤!");
         },
@@ -474,18 +484,20 @@ $("#btn_create_user").click(function(){//新增管理者
             alert("新增成功");
             $(location).attr("href","/admin/user");
           }else if(msg=="empty"){
-            alert("請輸入名字、帳號及密碼");
+            alert("請輸入名字、E-mail及密碼");
           }else if(msg=="repeat"){
-            alert("此帳號已被使用，請重新輸入");
+            alert("此E-mail已被使用，請重新輸入");
           }else if(msg=="passwordError"){
             alert("兩組密碼不同，請重新輸入密碼");
-          }else{
+          }else if(msg == "createError"){
             alert("新增失敗");
+          }else{
+            alert("失敗");
           }
         }
     })
-  }else if(name=="" || username=="" || password=="" || password2==""){
-    alert("請輸入名字、帳號及密碼");
+  }else if(name=="" || email=="" || password=="" || password2==""){
+    alert("請輸入名字、E-mail及密碼");
   }else if(error1!="" || error2!="" || error3!="" || error4!=""){
     alert("格式有誤，請重新輸入");
     $("#psw_user_password").val("");
@@ -499,8 +511,9 @@ $("#btn_create_user").click(function(){//新增管理者
 });
 
 $("#btn_update_user").click(function(){//更新管理者
-  var username = $(this).attr("data-id");
+  var id = $(this).attr("data-id");
   var name = $("#txt_user_name_update").val();
+  //var email = $("#txt_email_update").text();
   var password = $().crypt({method:"sha1",source:$("#psw_user_password_update").val()});
   var password2 = $().crypt({method:"sha1",source:$("#psw_user_password2_update").val()});
   var error1 = $(".user_error1").text();
@@ -510,10 +523,13 @@ $("#btn_update_user").click(function(){//更新管理者
 
   if(name!="" && password!="" && password==password2 && error1=="" && error2=="" && error3=="" && error4==""){
     $.ajax({
-        url:"/admin/ajax/update_user",
-        data:"adminName="+name+"&adminUsername="+username+"&adminPassword="+password+"&adminPassword2="+password2,
-        type:"POST",
+        url:"/admin/user/"+id,
+        data:"adminName="+name+"&adminPassword="+password+"&adminPassword2="+password2,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
           alert("錯誤!");
         },
@@ -525,8 +541,12 @@ $("#btn_update_user").click(function(){//更新管理者
             alert("請輸入名字及密碼");
           }else if(msg=="passwordError"){
             alert("兩組密碼不同，請重新輸入密碼");
-          }else{
+          }else if(msg=="permissionsError"){
+            alert("沒有修改權限");
+          }else if(msg=="updateError"){
             alert("修改失敗");
+          }else{
+            alert("失敗");
           }
         }
     })
