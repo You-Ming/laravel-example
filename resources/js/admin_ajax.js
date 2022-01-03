@@ -1,11 +1,13 @@
 $('[data-toggle=confirmation_about]').confirmation({//確認刪除關於我們
   onConfirm: function() {//按下是
-    var aboutTitle = $(this).attr("data-id");
+    var id = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_about",
-        data:"aboutTitle="+aboutTitle,
-        type:"POST",
+        url:"/admin/about/"+id,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -26,10 +28,12 @@ $('[data-toggle=confirmation_contact]').confirmation({//確認刪除聯絡我們
   onConfirm: function() {
     var guestID = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_contact",
-        data:"guestID="+guestID,
-        type: "POST",
+        url:"/admin/contact/"+guestID,
+        type: "DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -51,10 +55,13 @@ $('[data-toggle=confirmation_banner]').confirmation({//確認刪除橫幅
     var bannerID = $(this).attr("data-id");
     var bannerImgName = $(this).attr("data-name");
     $.ajax({
-        url:"/admin/ajax/delete_banner",
-        data:"bannerID="+bannerID+"&bannerImgName="+bannerImgName,
-        type:"POST",
+        url:"/admin/home/"+bannerID,
+        //data:"bannerID="+bannerID+"&bannerImgName="+bannerImgName,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -75,10 +82,12 @@ $('[data-toggle=confirmation_news]').confirmation({//確認刪除新聞
   onConfirm: function() {
     var newsID = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_news",
-        data:"newsID="+newsID,
-        type:"POST",
+        url:"/admin/news/"+newsID,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("失敗");
         },
@@ -99,12 +108,13 @@ $('[data-toggle=confirmation_news]').confirmation({//確認刪除新聞
 $('[data-toggle=confirmation_product]').confirmation({//確認刪除產品
   onConfirm: function() {
     var productID = $(this).attr("data-id");
-    var productImgName = $(this).attr("data-name");
     $.ajax({
-        url:"/admin/ajax/delete_product",
-        data:"productID="+productID+"&productImgName="+productImgName,
-        type:"POST",
+        url:"/admin/product/"+productID,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -123,12 +133,14 @@ $('[data-toggle=confirmation_product]').confirmation({//確認刪除產品
 
 $('[data-toggle=confirmation_type]').confirmation({//確認刪除產品分類
   onConfirm: function() {
-    var typeName = $(this).attr("data-id");
+    var id = $(this).attr("data-id");
     $.ajax({
-        url:"/admin/ajax/delete_productType",
-        data:"typeName="+typeName,
-        type:"POST",
+        url:"/admin/product_type/"+id,
+        type:"DELETE",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -148,7 +160,7 @@ $('[data-toggle=confirmation_type]').confirmation({//確認刪除產品分類
 $('[data-toggle=confirmation_user]').confirmation({//確認刪除管理者
   onConfirm: function() {
     $("#modal_user").modal();//轉場效果輸入密碼
-    $("#text_del_user").text($(this).attr("data-id"));//取得管理者名稱
+    $("#text_del_user").text($(this).attr("data-email"));//取得管理者E-mail
     $("#modal_user").on('shown.bs.modal',function(){
       $("#del_password").val("");
       $(this).find("#del_password").focus();
@@ -159,13 +171,17 @@ $("#modal_user").on('hidden.bs.modal',function(){
     $("#text_del_user").text("");
 });
 $("#btn_delete_user").click(function(){//確定刪除管理者
-  var adminUsername = $("#text_del_user").text();
-  var adminPassword = $("#del_password").val();
+  var id = $(this).attr("data-id");
+  var adminEmail = $("#text_del_user").text();
+  var adminPassword = $().crypt({method:"sha1",source:$("#del_password").val()});
   $.ajax({
-      url:"/admin/ajax/delete_user",
-      data:"adminUsername="+adminUsername+"&adminPassword="+adminPassword,
-      type:"POST",
+      url:"/admin/user/"+id,
+      data:"adminEmail="+adminEmail+"&adminPassword="+adminPassword,
+      type:"DELETE",
       datatype:"json",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
       error:function(){
           alert("錯誤");
       },
@@ -180,8 +196,11 @@ $("#btn_delete_user").click(function(){//確定刪除管理者
           else if(msg == "empty") {
               alert("請輸入密碼");
           }
-          else {
+          else if(msg == "deleteError") {
               alert("刪除失敗");
+          }
+          else {
+              alert("失敗");
           }
       }
   })
@@ -189,38 +208,37 @@ $("#btn_delete_user").click(function(){//確定刪除管理者
 
 $("#btn_create_banner").click(function(){//新增橫幅
   var name = $("#txt_banner_name").val();
-  var filename = $("#txt_banner_img_name").val();
-  var title = $("#txt_banner_title").val();
   var error1 = $(".banner_error1").text();
   var formData = new FormData($('#formSetBanner')[0]);
 
   if(name!="" && error1==""){
     $.ajax({
-        url:"/admin/admin/set_banner",
+        url:"/admin/home",
         data:formData,
         type:"POST",
         datatype:"json",
         contentType: false,
         processData: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
         success:function(msg){
-            msg = JSON.parse(msg);
-            if(msg.status){
-              if(msg.data == "success"){
-                  alert("新增成功");
-                  $(location).attr("href","/admin/home");
-              }else if(msg.data == "empty"){
-                  alert("請輸入橫幅名稱");
-              }else if(msg.data == "repeat"){
-                  alert("此名稱已使用過，請重新輸入");
-              }else{
-                  alert("新增失敗");
-              }
-            }
-            else{
-              $('<p>'+msg.error_string+'</p>').appendTo($('#banner_upload_error'));
+            if(msg == "success") {
+                alert("新增成功");
+                $(location).attr("href","/admin/home");
+            }else if(msg == "empty"){
+              alert("請輸入橫幅名稱");
+            }else if(msg == "repeat"){
+                alert("此名稱已使用過，請重新輸入");
+            }else if(msg == "uploadError"){
+                $('<p>圖片上傳失敗</p>').appendTo($('#banner_upload_error'));
+            }else if(msg == "createError"){
+                alert("新增失敗");
+            }else{
+                alert("失敗");
             }
         },
     })
@@ -242,17 +260,20 @@ $("#btn_update_banner").click(function(){//更新橫幅
 
   if(name!="" && error==""){
     $.ajax({
-        url:"/admin/ajax/update_banner",
-        data:"bannerID="+id+"&bannerOldname="+oldname+"&bannerName="+name+"&bannerTitle="+title,
-        type:"POST",
+        url:"/admin/home/"+id,
+        data:"bannerName="+name+"&bannerTitle="+title,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
-            alert("錯誤!");
+            alert("錯誤");
         },
         success:function(msg){
             if(msg == "success"){
-                alert("修改成功");
-                $(location).attr("href","/admin/home");
+              alert("修改成功");
+              $(location).attr("href","/admin/home");
             }else if(msg == "empty"){
                 alert("請輸入產品名稱");
             }else if(msg == "repeat"){
@@ -277,10 +298,13 @@ $("#btn_create_about").click(function(){//新增關於我們
   var content = CKEDITOR.instances.textarea_set_about.getData();
   if(title != "" && error =="") {
     $.ajax({
-        url:"/admin/ajax/set_about",
+        url:"/admin/about",
         data:"aboutTitle="+title+"&aboutContent="+content,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -295,8 +319,11 @@ $("#btn_create_about").click(function(){//新增關於我們
             else if(msg == "repeat") {
               alert("此標題已使用，請重新輸入");
             }
-            else {
+            else if(msg == "createError"){
               alert("新增失敗");
+            }
+            else {
+              alert("失敗");
             }
         }
     })
@@ -309,16 +336,19 @@ $("#btn_create_about").click(function(){//新增關於我們
 });
 
 $("#btn_update_about").click(function(){//更新關於我們
-  var oldtitle = $(this).attr("data-id");
+  var id = $(this).attr("data-id");
   var title = $("#txt_update_about").val();
   var error = $(".about_error1").text();
   var content = CKEDITOR.instances.textarea_update_about.getData();
   if(title != "" && error == "") {
     $.ajax({
-        url:"/admin/ajax/update_about",
-        data:"oldtitle="+oldtitle+"&aboutTitle="+title+"&aboutContent="+content,
-        type:"POST",
+        url:"/admin/about/"+id,
+        data:"aboutTitle="+title+"&aboutContent="+content,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -333,8 +363,11 @@ $("#btn_update_about").click(function(){//更新關於我們
             else if(msg == "repeat") {
               alert("此標題已使用，請重新輸入");
             }
+            else if(msg == "updateError"){
+              alert("更新失敗");
+            }
             else {
-              alert("新增失敗");
+              alert("失敗");
             }
         }
     })
@@ -352,10 +385,13 @@ $("#btn_create_news").click(function(){//新增新聞
   var content = CKEDITOR.instances.textarea_set_news.getData();
   if(title != "") {
     $.ajax({
-        url:"/admin/ajax/set_news",
+        url:"/admin/news",
         data:"newsTitle="+title+"&newsTime="+time+"&newsContent="+content,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤");
         },
@@ -367,11 +403,11 @@ $("#btn_create_news").click(function(){//新增新聞
             else if(msg == "empty") {
               alert("請輸入標題");
             }
-            else if(msg == "repeat") {
-              alert("此標題已使用，請重新輸入");
+            else if(msg == "createError"){
+              alert("新增失敗");
             }
             else {
-              alert("新增失敗");
+              alert("失敗");
             }
         }
     })
@@ -389,10 +425,13 @@ $("#btn_update_news").click(function(){//更新新聞
 
   if(title != "" && time != ""){
     $.ajax({
-        url:"/admin/ajax/update_news",
+        url:"/admin/news/"+id,
         data:"newsID="+id+"&newsTitle="+title+"&newsContent="+content+"&newsTime="+time,
-        type:"POST",
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
           alert("錯誤");
         },
@@ -404,8 +443,11 @@ $("#btn_update_news").click(function(){//更新新聞
           else if(msg == "empty"){
             alert("請輸入標題及時間");
           }
-          else {
+          else if(msg == "updateError"){
             alert("修改失敗");
+          }
+          else {
+            alert("失敗");
           }
         },
     })
@@ -417,7 +459,7 @@ $("#btn_update_news").click(function(){//更新新聞
 
 $("#btn_create_user").click(function(){//新增管理者
   var name = $("#txt_user_name").val();
-  var username = $("#txt_user_username").val();
+  var email = $("#txt_user_email").val();
   var password = $().crypt({method:"sha1",source:$("#psw_user_password").val()});
   var password2 = $().crypt({method:"sha1",source:$("#psw_user_password2").val()});
   var error1 = $(".user_error1").text();
@@ -425,12 +467,15 @@ $("#btn_create_user").click(function(){//新增管理者
   var error3 = $(".user_error3").text();
   var error4 = $(".user_error4").text();
 
-  if(name!="" && username!="" && password!="" && password==password2 && error1=="" && error2=="" && error3=="" && error4==""){
+  if(name!="" && email!="" && password!="" && password==password2 && error1=="" && error2=="" && error3=="" && error4==""){
     $.ajax({
-        url:"/admin/ajax/set_user",
-        data:"adminName="+name+"&adminUsername="+username+"&adminPassword="+password+"&adminPassword2="+password2,
+        url:"/admin/user",
+        data:"adminName="+name+"&adminEmail="+email+"&adminPassword="+password+"&adminPassword2="+password2,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
           alert("錯誤!");
         },
@@ -439,18 +484,20 @@ $("#btn_create_user").click(function(){//新增管理者
             alert("新增成功");
             $(location).attr("href","/admin/user");
           }else if(msg=="empty"){
-            alert("請輸入名字、帳號及密碼");
+            alert("請輸入名字、E-mail及密碼");
           }else if(msg=="repeat"){
-            alert("此帳號已被使用，請重新輸入");
+            alert("此E-mail已被使用，請重新輸入");
           }else if(msg=="passwordError"){
             alert("兩組密碼不同，請重新輸入密碼");
-          }else{
+          }else if(msg == "createError"){
             alert("新增失敗");
+          }else{
+            alert("失敗");
           }
         }
     })
-  }else if(name=="" || username=="" || password=="" || password2==""){
-    alert("請輸入名字、帳號及密碼");
+  }else if(name=="" || email=="" || password=="" || password2==""){
+    alert("請輸入名字、E-mail及密碼");
   }else if(error1!="" || error2!="" || error3!="" || error4!=""){
     alert("格式有誤，請重新輸入");
     $("#psw_user_password").val("");
@@ -464,8 +511,9 @@ $("#btn_create_user").click(function(){//新增管理者
 });
 
 $("#btn_update_user").click(function(){//更新管理者
-  var username = $(this).attr("data-id");
+  var id = $(this).attr("data-id");
   var name = $("#txt_user_name_update").val();
+  //var email = $("#txt_email_update").text();
   var password = $().crypt({method:"sha1",source:$("#psw_user_password_update").val()});
   var password2 = $().crypt({method:"sha1",source:$("#psw_user_password2_update").val()});
   var error1 = $(".user_error1").text();
@@ -475,10 +523,13 @@ $("#btn_update_user").click(function(){//更新管理者
 
   if(name!="" && password!="" && password==password2 && error1=="" && error2=="" && error3=="" && error4==""){
     $.ajax({
-        url:"/admin/ajax/update_user",
-        data:"adminName="+name+"&adminUsername="+username+"&adminPassword="+password+"&adminPassword2="+password2,
-        type:"POST",
+        url:"/admin/user/"+id,
+        data:"adminName="+name+"&adminPassword="+password+"&adminPassword2="+password2,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
           alert("錯誤!");
         },
@@ -490,8 +541,12 @@ $("#btn_update_user").click(function(){//更新管理者
             alert("請輸入名字及密碼");
           }else if(msg=="passwordError"){
             alert("兩組密碼不同，請重新輸入密碼");
-          }else{
+          }else if(msg=="permissionsError"){
+            alert("沒有修改權限");
+          }else if(msg=="updateError"){
             alert("修改失敗");
+          }else{
+            alert("失敗");
           }
         }
     })
@@ -515,10 +570,13 @@ $("#btn_create_productType").click(function(){//新增產品分類
 
   if(name!="" && error==""){
     $.ajax({
-        url:"/admin/ajax/set_productType",
-        data:"typeName="+name,
+        url:"/admin/product_type",
+        data:"productTypeName="+name,
         type:"POST",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
@@ -530,8 +588,10 @@ $("#btn_create_productType").click(function(){//新增產品分類
                 alert("請輸入分類名稱");
             }else if(msg == "repeat"){
                 alert("此名稱已使用過，請重新輸入");
-            }else{
+            }else if(msg == "createError"){
                 alert("新增失敗");
+            }else{
+                alert("失敗");
             }
         },
     })
@@ -545,16 +605,19 @@ $("#btn_create_productType").click(function(){//新增產品分類
 });
 
 $("#btn_update_productType").click(function(){//更新產品分類
-  var oldname = $(this).attr("data-id");
+  var id = $(this).attr("data-id");
   var name = $("#txt_productType_name_update").val();
   var error = $(".user_error1").text();
 
   if(name!="" && error==""){
     $.ajax({
-        url:"/admin/ajax/update_productType",
-        data:"typeName="+name+"&oldName="+oldname,
-        type:"POST",
+        url:"/admin/product_type/"+id,
+        data:"productTypeName="+name,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
@@ -566,8 +629,10 @@ $("#btn_update_productType").click(function(){//更新產品分類
                 alert("請輸入分類名稱");
             }else if(msg == "repeat"){
                 alert("此名稱已使用過，請重新輸入");
-            }else{
+            }else if(msg == "updateError"){
                 alert("修改失敗");
+            }else{
+                alert("失敗");
             }
         },
     })
@@ -599,33 +664,37 @@ $(document).on('click',"#btn_create_product",function(e){//新增產品
 
   if(name!="" && error=="" && type!=""){
     $.ajax({
-        url:"/admin/product/set_product",
+        url:"/admin/product",
         data:formData,
         type:"POST",
         datatype:"json",
         contentType: false,
         processData: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
         success:function(msg){
-          msg = JSON.parse(msg);
-          if(msg.status){
-            if(msg.data == "success"){
-                alert("新增成功");
-                $(location).attr("href","/admin/product");
-            }else if(msg.data == "empty"){
-                alert("請輸入產品名稱");
-            }else if(msg.data == "repeat"){
-                alert("此名稱已使用過，請重新輸入");
-            }else if(msg.data == "typeEmpty"){
-                alert("請選擇產品分類");
-            }else if(msg.data == "error"){
-                alert("新增失敗");
-            }
+          if(msg == "success") {
+            alert("新增成功");
+            $(location).attr("href","/admin/product");
+          }else if(msg == "empty"){
+            alert("請輸入產品名稱");
+          }else if(msg == "repeat"){
+            alert("此名稱已使用過，請重新輸入");
+          }else if(msg == "typeEmpty"){
+            alert("請選擇產品分類");
+          }else if(msg == "uploadEmpty"){
+            alert("請選擇圖片");
+          }else if(msg == "uploadError"){
+            $('<p>圖片上傳失敗</p>').appendTo($('#product_upload_error'));
+          }else if(msg == "createError"){
+            alert("新增失敗");
           }else{
-              $('<p>'+msg.error_string+'</p>').appendTo($('#product_upload_error'));
-            }
+            alert("失敗");
+          }
         },
     })
   }else if(name == ""){
@@ -641,7 +710,6 @@ $(document).on('click',"#btn_create_product",function(e){//新增產品
 
 $("#btn_update_product").click(function(){//更新產品
   var id = $(this).attr("data-id");
-  var oldname = $(this).attr("data-name");
   var name = $("#txt_product_name_update").val();
   var type = $("#sel_product_type_update").val();
   var desc = CKEDITOR.instances.textarea_update_product_desc.getData();
@@ -656,25 +724,30 @@ $("#btn_update_product").click(function(){//更新產品
   var spec = JSON.stringify(json_data);
   if(name!="" && error=="" && type!=""){
     $.ajax({
-        url:"/admin/ajax/update_product",
-        data:"productID="+id+"&productOldname="+oldname+"&productName="+name+"&productType="+type+"&productSpecification="+spec+"&productDescription="+desc,
-        type:"POST",
+        url:"/admin/product/"+id,
+        data:"productName="+name+"&productType="+type+"&productSpecification="+spec+"&productDescription="+desc,
+        type:"PUT",
         datatype:"json",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         error:function(){
             alert("錯誤!");
         },
         success:function(msg){
-            if(msg == "success"){
+            if(msg == "success") {
                 alert("修改成功");
                 $(location).attr("href","/admin/product");
             }else if(msg == "empty"){
-                alert("請輸入產品名稱");
+              alert("請輸入產品名稱");
             }else if(msg == "repeat"){
-                alert("此名稱已使用過，請重新輸入");
+              alert("此名稱已使用過，請重新輸入");
             }else if(msg == "typeEmpty"){
-                alert("請選擇產品分類");
+              alert("請選擇產品分類");
+            }else if(msg == "updateError"){
+              alert("修改失敗");
             }else{
-                alert("修改失敗");
+              alert("失敗");
             }
         },
     })

@@ -6,34 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <!--link rel="stylesheet" href="/style.css"-->
-  <!--link rel="stylesheet" href="/header.css"-->
   <link rel="shortcut icon" type="image/png" href="/images/Logo.png" />
-  <link rel="stylesheet" href="/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
-  <link rel="stylesheet" href="/css/admin-logo-nav.css" />
-  <link rel="stylesheet" href="/css/admin-footer.css" />
-  <link rel="stylesheet" href="/css/admin-styles.css" />
-  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" />
-  <link rel="stylesheet" href="/css/bootstrap-select.min.css" />
+  <link rel="stylesheet" href="/css/admin/admin.css"/>
 
   <script type="text/javascript"></script>
-  <!-- jQuery -->
-  <script src="/js/jquery.min.js"></script>
-  <script src="/js/jquery.crypt.js"></script>
-  <!-- Bootstrap Core JavaScript -->
-  <script src="/js/bootstrap.min.js"></script>
-  <script src="/js/metisMenu.min.js"></script>
-  <script src="/js/admin.js"></script>
-  {{--
-  <script src="/asset/ckeditor/ckeditor.js"></script>
-  <script src="/asset/ckfinder/ckfinder.js"></script>
-  --}}
-  <script src="/js/moment.js"></script>
-  <script src="/js/bootstrap-datetimepicker.min.js"></script>
-  <script src="/js/bootstrap-select.min.js"></script>
-  <script src="/js/defaults-zh_TW.js"></script>
-  <!--script src="/js/bootstrap-datetimepicker.zh-TW.js"></script-->
+  <script src="/js/admin/admin.js"></script>
 
 </head>
 
@@ -109,8 +86,8 @@
         </div>
       </div>
     </div>
-    <script src="/js/bootstrap-confirmation.js"></script>
-    <script src="/js/admin_ajax.js"></script>
+
+    <script src="/js/admin/bottom.js"></script>
 
 
   </div>

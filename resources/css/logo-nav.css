@@ -23,7 +23,7 @@ body {
         padding: 15px;
     }
 
-    .center-block() {
+    .center-block {
       display: block;
       margin-left: auto;
       margin-right: auto;
@@ -31,7 +31,9 @@ body {
 
     #banner_wrap, .home{
       width: 830px;
-      .center-block();
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .navtext {

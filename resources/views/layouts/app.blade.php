@@ -7,19 +7,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <link rel="shortcut icon" type="image/png" href="/images/Logo.png"/>
-        <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
-        <link rel="stylesheet" href="/css/logo-nav.css"/>
-        <link rel="stylesheet" href="/css/footer.css"/>
-        <link rel="stylesheet" href="/css/styles.css"/>
+        <link rel="stylesheet" href="/css/app.css"/>
 
         <script type="text/javascript"></script>
-        <!-- jQuery -->
-        <script src="/js/jquery.js"></script>
-
-        <!-- Bootstrap Core JavaScript -->
-        <script src="/js/bootstrap.min.js"></script>
-        <script src="/js/toggle.js"></script>
+        <script src="/js/app.js"></script>
+        
     </head>
     <body class="antialiased">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
